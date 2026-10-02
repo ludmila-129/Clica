@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>¡Clica!</title>
+<link rel="icon" href="assets/logo.png">
+<style>
+@font-face{font-family:'VT323';src:url(assets/fonts/vt323.woff2) format('woff2');font-display:swap}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#1a1c2c;--panel:#16213e;--cream:#f5e6c8;--orange:#e8834a;--green:#5ba08a;--red:#c0392b;--yellow:#f5c842;--muted:#8892b0}
+body{font-family:'VT323',monospace;background:var(--bg);color:var(--cream);min-height:100vh}
+body.bgmenu{background:linear-gradient(rgba(10,15,40,.25),rgba(10,15,40,.25)),url(assets/ui/fondo.jpg) center/cover fixed;image-rendering:pixelated}
+.shell{max-width:920px;margin:0 auto;padding:12px 12px 32px}
+.scr{display:none}.scr.active{display:block}
+.tc{text-align:center}
+
+/* Botones pixel art (a partir de tu hoja de iconos) */
+.pbtn,.btn-next,.menubtn{font-family:'VT323',monospace;font-size:30px;line-height:1;color:#14141c;text-align:center;cursor:pointer;background:none;text-decoration:none;
+  border:15px solid transparent;border-image:url(assets/ui/btn_green.png) 30 fill/15px stretch;image-rendering:pixelated;padding:4px 10px;display:inline-block}
+.b-blue,.btn-alt,.menubtn{border-image-source:url(assets/ui/btn_blue.png)}
+.b-orange{border-image-source:url(assets/ui/btn_orange.png)}
+.wide{display:block;width:100%;margin-bottom:8px}
+.sm,.menubtn{font-size:22px;border-width:11px;border-image-width:11px;padding:2px 8px}
+.btn-next{display:none;width:100%;margin-bottom:10px}.btn-next.show{display:block}
+.pbtn:hover,.btn-next:hover,.menubtn:hover{filter:brightness(1.1)}
+.pbtn:active,.btn-next:active{transform:translateY(2px)}
+.menubtns{max-width:380px;margin:0 auto}
+
+.hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:0 4px;border:12px solid transparent;border-image:url(assets/ui/f_navy.png) 6 fill/12px;image-rendering:pixelated}
+.logo{background:none;border:none;cursor:pointer}
+.prog-wrap{flex:1;height:22px;border:6px solid transparent;border-image:url(assets/ui/f_dark.png) 6 fill/6px;image-rendering:pixelated}
+.prog-fill{height:100%;width:0;background:var(--orange);transition:width .3s steps(10)}
+.mc{font-size:20px;color:var(--muted);white-space:nowrap}
+.mbox{border:12px solid transparent;border-image:url(assets/ui/f_navy.png) 6 fill/12px;image-rendering:pixelated;padding:0 4px;margin-bottom:10px}
+.mtag{font-size:19px;color:var(--orange);margin-bottom:2px;letter-spacing:2px;text-transform:uppercase}
+.mtext{font-size:30px;line-height:1.2}
+.msub{font-size:20px;color:var(--muted);margin-top:2px}
+.title{font-size:60px;color:var(--yellow);margin:4px 0;line-height:1}
+.big{display:block;width:100%;max-width:420px;margin:0 auto 10px}
+.lvl{display:block;width:100%;background:none;border:12px solid transparent;border-image:url(assets/ui/f_navy.png) 6 fill/12px;image-rendering:pixelated;padding:4px 6px;margin-bottom:10px;cursor:pointer;text-align:left}
+.lvl b{font-size:40px;color:var(--orange);display:block;margin-bottom:2px}
+.lvl span{font-size:22px;color:var(--muted)}
+.lvl:hover:not(:disabled){border-image-source:url(assets/ui/f_hover.png)}.lvl:disabled{opacity:.6;cursor:not-allowed}
+.avs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.avb{background:none;border:12px solid transparent;border-image:url(assets/ui/f_navy.png) 6 fill/12px;image-rendering:pixelated;padding:2px;cursor:pointer;display:flex;justify-content:center}
+.avb img{height:120px}
+.avb:hover{border-image-source:url(assets/ui/f_hover.png)}.avb.sel{border-image-source:url(assets/ui/f_sel.png)}
+
+/* Panel blanco (tutorial y ayuda) */
+.panel{border:16px solid transparent;border-image:url(assets/ui/panel.png) 16 fill/16px stretch;image-rendering:pixelated;color:#22222e;font-size:30px;line-height:1.2;padding:4px 8px;margin-bottom:10px;text-align:center}
+.panel h2{font-size:42px;margin:6px 0}
+.ftxt p{margin-bottom:10px;text-align:left}
+.langs{display:flex;gap:10px;justify-content:center}
+.tutlogo{text-align:center;margin-bottom:6px}.tutlogo img{height:130px;animation:bob 2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-10px)}}
+.tp{font-size:26px;color:#6a5a9a;margin:10px 0}
+.mouse{background:none;border:none;cursor:pointer;display:block;margin:8px auto}
+.rip{transform-origin:26px 20px;animation:rip 1.2s infinite}
+@keyframes rip{0%{transform:scale(.4);opacity:1}100%{transform:scale(2.4);opacity:0}}
+.opts{display:flex;justify-content:center;gap:40px;margin:10px 0}
+.o{background:none;border:none;cursor:pointer;padding:10px}.o img{height:110px;display:block}
+.o.hl{animation:glow 1s infinite alternate}
+@keyframes glow{from{filter:drop-shadow(0 0 2px var(--yellow))}to{filter:drop-shadow(0 0 14px var(--orange))}}
+.tstage{position:relative;height:230px}
+.tz{position:absolute;display:flex;align-items:center;justify-content:center;font-size:48px;border:3px dashed #9aa3b5;border-radius:12px;color:#9aa3b5}
+.tz.hl{border-color:var(--orange);color:var(--orange);background:rgba(232,131,74,.15)}
+
+/* Escena */
+.stage{container-type:inline-size;position:relative;border:12px solid transparent;border-image:url(assets/ui/f_navy.png) 6/12px;image-rendering:pixelated;margin-bottom:10px;background:#000;overflow:hidden;user-select:none}
+.stage .bg{width:100%;display:block;pointer-events:none}
+.write{position:absolute;display:flex;align-items:flex-end;justify-content:center;padding-bottom:1.6cqw;font-family:'VT323',monospace;font-size:2.8cqw;color:#2a1808;pointer-events:none}
+.tach{position:absolute;height:.5cqw;background:#d21f1f;pointer-events:none;transform:translateY(-50%)}
+.hs{position:absolute;cursor:pointer;border-radius:12px;transition:background .15s}
+.hs:hover{background:rgba(255,255,255,.14)}
+.hs.good{background:rgba(91,160,138,.45)}.hs.bad{background:rgba(192,57,43,.45)}
+.hs.dbg,.zn.dbg{outline:2px dashed #3f3}
+.zn{position:absolute;pointer-events:none}
+.fig,.drag{position:absolute;image-rendering:auto;filter:drop-shadow(0 3px 2px rgba(0,0,0,.6))}
+.fig{pointer-events:none}
+.drag{cursor:grab;z-index:20;touch-action:none;filter:drop-shadow(0 0 4px #fff) drop-shadow(0 3px 2px rgba(0,0,0,.6))}
+.drag.dragging{cursor:grabbing;z-index:30;filter:drop-shadow(0 0 6px var(--yellow))}
+.dbgtxt{font-size:18px;color:#3f3;min-height:22px}
+.hudrow{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.ico{height:56px}
+.slot{min-width:112px;height:112px;border:12px solid transparent;border-image:url(assets/ui/f_navy.png) 6 fill/12px;image-rendering:pixelated;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px;font-size:18px;text-align:center}
+.slot img{max-height:56px;max-width:80px}
+.pile{display:flex;flex-wrap:wrap;gap:2px;align-items:center}.pile img{height:34px}
+.list{font-size:24px;list-style:none}
+.list li{padding:2px 0;display:flex;align-items:center;gap:8px}.list li.done{color:var(--green)}.list li img{height:26px}
+.fb{border:12px solid transparent;border-image:url(assets/ui/f_ok.png) 6 fill/12px;image-rendering:pixelated;padding:0 4px;margin-bottom:10px;display:none;font-size:26px}
+.fb.show{display:block}.fb.ok{color:#7fffd4}
+.fb.fail{border-image-source:url(assets/ui/f_fail.png);color:#ff9999}
+.fb-note{font-size:20px;color:var(--muted);margin-top:2px}
+.stars{font-size:30px;color:var(--yellow);letter-spacing:2px;margin:12px 0;word-break:break-all}
+@media(max-width:560px){.avs{grid-template-columns:repeat(2,1fr)}}
+.mbox img,.hdr img,.avb img,.slot img,.stage .bg{image-rendering:auto}
+.hs.sel{background:rgba(91,160,138,.45)}
+.shell{max-width:1280px}
+.scr:not(#game){max-width:920px;margin-left:auto;margin-right:auto}
+.play{display:flex;flex-direction:column}
+.left{min-width:0}
+.pw{display:flex;gap:6px;margin:6px 0 10px}
+.pwd{width:44px;height:56px;display:flex;align-items:center;justify-content:center;font-size:42px;color:var(--yellow);border:6px solid transparent;border-image:url(assets/ui/f_dark.png) 6 fill/6px;image-rendering:pixelated}
+/* En ordenador: la imagen a la izquierda y la lista, avisos y botón a la derecha, sin tener que hacer zoom out */
+@media(min-width:900px){
+  .play{flex-direction:row;justify-content:center;align-items:flex-start;gap:14px}
+  .stage{width:min(calc(100vw - 380px),940px,calc((100vh - 300px)*var(--ar,1.6)));min-width:420px}
+  .side{flex:0 0 300px}
+}
+</style></head><body class="bgmenu">
+<div class="shell">
+
+<div class="scr active" id="menu">
+  <div class="mbox tc"><img class="big" src="assets/logo.png" alt="¡Clica!" style="max-width:200px"><div class="title">¡CLICA!</div><div class="msub">El juego de apuntar y hacer clic en español</div></div>
+  <div class="menubtns">
+    <button class="pbtn b-green wide" onclick="show('avs')">JUGAR</button>
+    <button class="pbtn b-orange wide" onclick="tutStart()">TUTORIAL</button>
+    <button class="pbtn b-orange wide" onclick="faq('es');show('faq')">AYUDA &amp; FAQ</button>
+    <a class="pbtn b-orange wide" href="https://ludmila-129.github.io/portafolio-de-clases/" target="_blank" rel="noopener noreferrer">MÁS JUEGOS</a>
+  </div>
+</div>
+
+<div class="scr" id="avs">
+  <div class="mbox tc"><div class="mtag">PASO 1</div><div class="mtext">Elige tu avatar</div></div>
+  <div class="avs" id="avgrid"></div>
+  <button class="btn-next" id="avgo" onclick="show('lv')">CONTINUAR</button>
+  <button class="pbtn b-blue wide" onclick="show('menu')">VOLVER</button>
+</div>
+
+<div class="scr" id="lv">
+  <div class="mbox tc"><div class="mtag">PASO 2</div><div class="mtext">Elige tu nivel</div></div>
+  <button class="lvl" onclick="start()"><b>A1</b><span>12 misiones: en la tienda, en la ciudad y en casa</span></button>
+  <button class="lvl" disabled><b>A2</b><span>🔒 Próximamente</span></button>
+  <button class="pbtn b-orange wide" onclick="show('avs')">CAMBIAR AVATAR</button>
+  <button class="pbtn b-blue wide" onclick="show('menu')">VOLVER</button>
+</div>
+
+<div class="scr" id="tut">
+  <div class="tutlogo"><img src="assets/logo.png" alt="¡Clica!"></div>
+  <div class="panel"><div id="tt"></div><div id="tbody"></div></div>
+  <button class="pbtn b-blue wide" onclick="show('menu')">VOLVER</button>
+</div>
+
+<div class="scr" id="faq">
+  <div class="panel">
+    <div class="langs"><button class="pbtn b-orange sm" onclick="faq('es')">ESPAÑOL</button><button class="pbtn b-orange sm" onclick="faq('en')">ENGLISH</button></div>
+    <h2 id="fh"></h2><div class="ftxt" id="fp"></div>
+  </div>
+  <button class="pbtn b-blue wide" onclick="show('menu')">VOLVER</button>
+</div>
+
+<div class="scr" id="game">
+  <div class="hdr">
+    <button class="logo" onclick="goMenu()"><img src="assets/logo.png" alt="¡Clica!" style="height:34px;display:block"></button>
+    <button class="menubtn" onclick="goMenu()">VOLVER</button>
+    <div class="prog-wrap"><div class="prog-fill" id="pb"></div></div>
+    <div class="mc" id="mc"></div><div class="mc" id="st"></div>
+  </div>
+  <div class="mbox"><div class="mtag" id="tag"></div><div class="mtext" id="mt"></div><div class="msub" id="ms"></div></div>
+  <div class="play">
+    <div class="left"><div class="stage" id="stage"></div><div class="dbgtxt" id="dbg"></div></div>
+    <div class="side">
+      <div id="hud"></div>
+      <div class="fb" id="fb"><span id="ft"></span><div class="fb-note" id="fn"></div></div>
+      <button class="btn-next" id="nx" onclick="next()">CONTINUAR</button>
+    </div>
+  </div>
+</div>
+
+<div class="scr" id="end">
+  <div class="mbox tc">
+    <div class="mtag">NIVEL A1 COMPLETADO</div>
+    <img id="endav" alt="" style="height:130px;margin-top:8px">
+    <div class="stars" id="fstars"></div><div class="mtext" id="fmsg"></div>
+  </div>
+  <button class="btn-next show" onclick="start()">JUGAR DE NUEVO</button>
+  <button class="btn-next show btn-alt" onclick="show('menu')">MENÚ</button>
+</div>
+</div>
+<script src="levels.js"></script>
+<script src="game.js"></script>
+</body></html>

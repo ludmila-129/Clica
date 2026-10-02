@@ -114,6 +114,20 @@ const T={
       }else{flash(d,'bad');lose(L,s.hint)}
     }));
   },
+  /* Receta: elegir varios ingredientes (p. ej. cuatro patatas, una cebolla, el aceite y la sal) */
+  recipe(L,st,h){
+    const got={};L.recipe.forEach(r=>got[r.g]=0);
+    h.innerHTML='<div class="mtag">INGREDIENTES</div><ol class="list" id="rl"></ol>';
+    const draw=()=>$('#rl').innerHTML=L.recipe.map((r,i)=>`<li class="${got[r.g]>=r.n?'done':''}">${i+1}. ${r.l}${r.n>1?` (${got[r.g]}/${r.n})`:''}</li>`).join('');draw();
+    L.spots.forEach(s=>spot(st,s,d=>{
+      const r=L.recipe.find(x=>x.g===s.g);
+      if(!r){flash(d,'bad');lose(L,s.hint);return}
+      if(d.classList.contains('sel'))return;
+      if(got[s.g]>=r.n){flash(d,'bad');lose(L,'Solo necesitas '+r.l+'.');return}
+      d.classList.add('sel');got[s.g]++;draw();
+      if(L.recipe.every(x=>got[x.g]>=x.n))win(L);else fb(1,'¡Bien!','Sigue con la lista.');
+    }));
+  },
   /* Teclado del banco: escribir una contraseña con los números del teclado */
   keypad(L,st,h){
     let typed='';

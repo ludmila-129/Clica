@@ -94,7 +94,7 @@ body.bgmenu{background:linear-gradient(rgba(10,15,40,.25),rgba(10,15,40,.25)),ur
 @media(max-width:560px){.avs{grid-template-columns:repeat(2,1fr)}}
 .mbox img,.hdr img,.avb img,.slot img,.stage .bg{image-rendering:auto}
 .hs.sel{background:rgba(91,160,138,.45)}
-.shell{max-width:1280px}
+.shell{max-width:1700px}
 .scr:not(#game){max-width:920px;margin-left:auto;margin-right:auto}
 .play{display:flex;flex-direction:column}
 .left{min-width:0}
@@ -102,10 +102,13 @@ body.bgmenu{background:linear-gradient(rgba(10,15,40,.25),rgba(10,15,40,.25)),ur
 .pwd{width:44px;height:56px;display:flex;align-items:center;justify-content:center;font-size:42px;color:var(--yellow);border:6px solid transparent;border-image:url(assets/ui/f_dark.png) 6 fill/6px;image-rendering:pixelated}
 /* En ordenador: la imagen a la izquierda y la lista, avisos y botón a la derecha, sin tener que hacer zoom out */
 @media(min-width:900px){
-  .play{flex-direction:row;justify-content:center;align-items:flex-start;gap:14px}
-  .stage{width:min(calc(100vw - 380px),940px,calc((100vh - 300px)*var(--ar,1.6)));min-width:420px}
-  .side{flex:0 0 300px}
+  /* Escritorio: la escena ocupa la columna izquierda bajo la barra de progreso; el título del nivel, la lista y el botón van a la derecha */
+  #game.active{display:grid;grid-template-columns:auto 320px;justify-content:center;grid-template-areas:"hdr hdr" "left mbox" "left side";grid-template-rows:auto auto 1fr;column-gap:14px}
+  .play{display:contents}
+  #game .hdr{grid-area:hdr}#game .mbox{grid-area:mbox;align-self:start}#game .left{grid-area:left}#game .side{grid-area:side}
+  .stage{width:min(calc(100vw - 380px),1330px,calc((100vh - 189px)*var(--ar,1.6) + 24px));min-width:420px}
 }
+.dbgtxt:empty{display:none}
 </style></head><body class="bgmenu">
 <div class="shell">
 
@@ -128,7 +131,7 @@ body.bgmenu{background:linear-gradient(rgba(10,15,40,.25),rgba(10,15,40,.25)),ur
 
 <div class="scr" id="lv">
   <div class="mbox tc"><div class="mtag">PASO 2</div><div class="mtext">Elige tu nivel</div></div>
-  <button class="lvl" onclick="start()"><b>A1</b><span>12 misiones: en la tienda, en la ciudad y en casa</span></button>
+  <button class="lvl" onclick="start()"><b>A1</b><span>14 misiones: en la tienda, en la ciudad y en casa</span></button>
   <button class="lvl" disabled><b>A2</b><span>🔒 Próximamente</span></button>
   <button class="pbtn b-orange wide" onclick="show('avs')">CAMBIAR AVATAR</button>
   <button class="pbtn b-blue wide" onclick="show('menu')">VOLVER</button>

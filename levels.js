@@ -3,7 +3,7 @@
    Abre index.html?debug=1 para ver las zonas y las coordenadas de cada clic.
    spots: zonas clicables · zones: destinos de arrastre · ok:1 marca la respuesta correcta
    icon: sprite en assets/sprites/<icon>.png · av: avatar en la escena {x,y,w} (w = % del ancho) */
-const AV_N=8;
+const AV_N=12;
 const LEVELS=[
 {cat:'EN LA TIENDA',scene:'utensilios.jpg',type:'pick',cart:1,title:'Compra la cuchara',sub:'Haz clic en la cuchara',
  spots:[{r:[11.0, 6.5, 49.7, 48.2],icon:'tenedor',l:'el tenedor'},{r:[50.4, 6.5, 89.8, 48.2],icon:'cuchillo',l:'el cuchillo'},{r:[11.0, 50.8, 49.7, 91.1],icon:'cuchara',l:'la cuchara',ok:1},{r:[50.4, 50.8, 89.8, 91.1],l:'el cucharón'}],
@@ -102,5 +102,53 @@ const LEVELS=[
   {r:[52.0, 76.2, 69.2, 90.1],l:"las chanclas"},
   {r:[69.5, 76.2, 78.3, 90.1],l:"las sandalias"},
   {r:[78.7, 76.2, 87.4, 90.1],l:"las pantuflas"}],
- ok:'Un jersey: perfecto para estar en casa.',hint:'Eso no es un jersey. Mira la ropa con atención.'}
+ ok:'Un jersey: perfecto para estar en casa.',hint:'Eso no es un jersey. Mira la ropa con atención.'},
+{cat:'EN CASA',scene:'casa_plano.jpg',type:'pick',title:'Tienes hambre',sub:'Ve a la cocina: haz clic en la cocina',
+ spots:[
+  {r:[27.6, 6.0, 53.1, 32.2],l:"el dormitorio",hint:"Eso es el dormitorio. Tienes hambre: busca la cocina."},
+  {r:[53.4, 6.0, 71.9, 26.8],l:"el baño",hint:"Eso es el baño. Tienes hambre: busca la cocina."},
+  {r:[2.4, 33.3, 28.1, 64.2],l:"la biblioteca",hint:"Eso es la biblioteca. Tienes hambre: busca la cocina."},
+  {r:[37.4, 38.3, 71.9, 67.1],l:"el salón",hint:"Eso es el salón. Tienes hambre: busca la cocina."},
+  {r:[20.8, 67.1, 54.4, 96.6],l:"el comedor",hint:"Eso es el comedor. Tienes hambre: busca la cocina."},
+  {r:[55.4, 60.0, 97.6, 96.0],l:"el jardín",hint:"Eso es el jardín. Tienes hambre: busca la cocina."},
+  {r:[72.3, 31.9, 96.8, 59.7],l:"la cocina",ok:1}],
+ ok:'Esa es la cocina. ¡Vamos a cocinar!',hint:'Esa no es la cocina. Tienes hambre: busca la cocina.'},
+{cat:'EN CASA',scene:'nevera.jpg',type:'recipe',title:'Cocina una tortilla de patatas española',sub:'Busca los ingredientes en el refrigerador y fuera de él',
+ recipe:[{g:'patata',n:4,l:'cuatro patatas'},{g:'cebolla',n:1,l:'una cebolla'},{g:'aceite',n:1,l:'el aceite'},{g:'sal',n:1,l:'la sal'}],
+ spots:[
+  {r:[19.0, 0.0, 39.2, 23.6],l:"las frutas del bosque",hint:"Eso no está en la lista de ingredientes."},
+  {r:[43.9, 5.4, 57.6, 20.2],l:"los yogures",hint:"Eso no está en la lista de ingredientes."},
+  {r:[29.2, 14.6, 47.2, 33.7],l:"los huevos",hint:"Eso no está en la lista de ingredientes."},
+  {r:[19.0, 22.6, 29.4, 43.1],l:"la leche",hint:"Eso no está en la lista de ingredientes."},
+  {r:[40.3, 22.2, 57.3, 43.4],l:"la fruta",hint:"Eso no está en la lista de ingredientes."},
+  {r:[20.0, 38.8, 44.6, 58.0],l:"la fruta",hint:"Eso no está en la lista de ingredientes."},
+  {r:[3.1, 74.8, 19.6, 100.0],l:"los zumos",hint:"Eso no está en la lista de ingredientes."},
+  {r:[22.3, 80.9, 46.2, 100.0],l:"las verduras",hint:"Eso no está en la lista de ingredientes."},
+  {r:[19.0, 64.0, 33.7, 82.9],l:"los pimientos",hint:"Eso no está en la lista de ingredientes."},
+  {r:[53.5, 49.6, 58.9, 60.2],l:"el pimiento",hint:"Eso no está en la lista de ingredientes."},
+  {r:[20.0, 78.6, 24.9, 88.7],l:"el ajo",hint:"Eso no está en la lista de ingredientes."},
+  {r:[31.2, 72.5, 36.2, 80.6],l:"el ajo",hint:"Eso no está en la lista de ingredientes."},
+  {r:[34.8, 67.4, 40.1, 76.3],l:"el ajo",hint:"Eso no está en la lista de ingredientes."},
+  {r:[46.4, 46.9, 54.8, 56.6],l:"la patata",g:"patata"},
+  {r:[43.3, 52.8, 49.2, 59.6],l:"la patata",g:"patata"},
+  {r:[39.0, 54.6, 44.6, 62.3],l:"la patata",g:"patata"},
+  {r:[34.5, 59.6, 41.3, 67.7],l:"la patata",g:"patata"},
+  {r:[42.7, 60.0, 48.4, 68.5],l:"la patata",g:"patata"},
+  {r:[47.6, 54.6, 55.4, 65.8],l:"la patata",g:"patata"},
+  {r:[39.2, 64.0, 45.4, 71.4],l:"la patata",g:"patata"},
+  {r:[56.8, 63.6, 62.8, 73.5],l:"la cebolla",g:"cebolla"},
+  {r:[48.6, 70.1, 54.5, 79.8],l:"la cebolla",g:"cebolla"},
+  {r:[57.4, 72.5, 63.0, 80.2],l:"la cebolla",g:"cebolla"},
+  {r:[61.5, 70.1, 66.2, 77.1],l:"la cebolla",g:"cebolla"},
+  {r:[44.1, 75.7, 49.7, 84.2],l:"la cebolla",g:"cebolla"},
+  {r:[48.9, 79.5, 54.6, 86.5],l:"la cebolla",g:"cebolla"},
+  {r:[62.3, 79.8, 67.7, 88.9],l:"la cebolla",g:"cebolla"},
+  {r:[53.2, 69.4, 58.3, 76.1],l:"la cebolla",g:"cebolla"},
+  {r:[53.2, 76.1, 58.6, 83.3],l:"la cebolla",g:"cebolla"},
+  {r:[75.6, 6.7, 80.0, 25.9],l:"la sal",g:"sal"},
+  {r:[79.9, 9.2, 84.4, 29.4],l:"la pimienta",hint:"Eso no está en la lista de ingredientes."},
+  {r:[84.2, 4.3, 89.7, 34.0],l:"el aceite",g:"aceite"},
+  {r:[89.3, 9.7, 94.4, 38.0],l:"otra botella",hint:"Eso no está en la lista de ingredientes."},
+  {r:[93.8, 14.6, 99.1, 41.1],l:"el vinagre",hint:"Eso no está en la lista de ingredientes."}],
+ ok:'¡Ya tienes los ingredientes para la tortilla de patatas!',hint:'Eso no está en la lista de ingredientes.'}
 ];

@@ -1,4 +1,4 @@
-/* ¡Clica! — motor del juego. Los niveles están en levels.js */
+/* ¡Clica! motor del juego */
 const $=s=>document.querySelector(s);
 const DEBUG=/debug/.test(location.search);
 const IMG=(k,c='')=>`<img class="${c}" src="assets/sprites/${k}.png" alt="${k}" draggable="false">`;
@@ -10,7 +10,7 @@ function show(id){
   scrollTo(0,0);
 }
 
-/* ---- Avatares ---- */
+/* Avatares */
 (function(){
   const g=$('#avgrid');
   for(let i=1;i<=AV_N;i++){
@@ -21,7 +21,7 @@ function show(id){
   }
 })();
 
-/* ---- Flujo ---- */
+/* Flujo */
 function start(){idx=0;stars=0;load()}
 function load(){
   const L=LEVELS[idx],st=$('#stage'),h=$('#hud');
@@ -95,14 +95,14 @@ function cross(st,s){
 }
 function goMenu(){if(confirm('¿Volver al menú? Perderás el progreso de esta partida.'))show('menu')}
 
-/* ---- Tipos de misión ---- */
+/* misión */
 const T={
-  /* Clicar un objeto de la imagen; su sprite aparece en la casilla de selección */
+  /* Clicar un objeto de la imagen */
   pick(L,st,h){
     h.innerHTML='<div class="hudrow">'+(L.cart?'<img class="ico" src="assets/ui/icon_carrito.png" alt="">':'<div class="mtag">TU SELECCIÓN</div>')+'<div class="slot" id="slot"></div></div>';
     L.spots.forEach(s=>spot(st,s,d=>{slot(s);if(s.ok){flash(d,'good');win(L)}else{flash(d,'bad');lose(L,s.hint)}}));
   },
-  /* Encontrar todos los objetos correctos (p. ej. los dos autos azules) */
+  /* Encontrar todos los objetos correctos */
   findall(L,st,h){
     const need=L.spots.filter(s=>s.ok).length;let got=0;
     h.innerHTML='<div class="hudrow"><div class="mtag">TU SELECCIÓN</div><div class="pile" id="cart"></div></div>';
@@ -128,7 +128,7 @@ const T={
       if(L.recipe.every(x=>got[x.g]>=x.n))win(L);else fb(1,'¡Bien!','Sigue con la lista.');
     }));
   },
-  /* Teclado del banco: escribir una contraseña con los números del teclado */
+  /* Escribir una contraseña con los números del teclado */
   keypad(L,st,h){
     let typed='';
     h.innerHTML='<div class="mtag">TU CONTRASEÑA</div><div class="pw" id="pw"></div><ol class="list">'+L.words.map((w,i)=>`<li>${i+1}. ${w}</li>`).join('')+'</ol>';
@@ -177,7 +177,7 @@ const T={
     showZones(st,L.zones);
     dragger(a,st,L.zones,(z,bad)=>{if(!bad&&z.ok){win(L);return true}if(bad)lose(L);return false});
   },
-  /* Arrastrar un objeto de la escena (el avatar solo se ve) */
+  /* Arrastrar un objeto de la escena */
   move(L,st,h){
     showZones(st,L.zones);
     const e=document.createElement('img');e.src=`assets/sprites/${L.item.icon}.png`;e.className='drag';e.draggable=false;place(e,L.item);st.append(e);
@@ -185,7 +185,7 @@ const T={
   }
 };
 
-/* ---- Tutorial: clic -> seleccionar -> arrastrar ---- */
+/* Tutorial */
 const MOUSE='<button class="mouse" aria-label="clic"><svg viewBox="0 0 64 64" width="110" height="110"><rect x="18" y="8" width="28" height="48" rx="12" fill="#eef0f6" stroke="#14141c" stroke-width="3"/><path d="M19.5 30V22C19.5 14 25 9.5 32 9.5V30Z" fill="#e8834a"/><path d="M18 30h28M32 8v22" stroke="#14141c" stroke-width="3" fill="none"/><circle class="rip" cx="26" cy="20" r="6" fill="none" stroke="#e8834a" stroke-width="3"/></svg></button>';
 const ZL={r:[3,10,36,90],ok:1},ZR={r:[64,10,97,90]};
 function tutStart(){show('tut');tut(0)}
@@ -215,14 +215,14 @@ function tut(n){
   }
 }
 
-/* ---- Ayuda & FAQ (español / inglés) ---- */
+/* FAQ */
 const FAQ={
   es:{h:'Ayuda & FAQ',p:['Bienvenidos a "¡Clica!", el juego de cliquear y apuntar para aprender español.','Este juego ha sido creado con propósitos educativos.','Se recomienda anotar el vocabulario novedoso que aparece en cada nivel.','Si Ud. tiene preguntas sobre su funcionamiento, o problemas en el juego (bugs, virus, etc.), contáctese: "Ludmila-129" (desarrollador del juego).']},
   en:{h:'Help & FAQ',p:['Welcome to "¡Clica!", the point-and-click game for learning Spanish.','This game was created for educational purposes.','We recommend writing down the new vocabulary that appears in each level.','If you have questions about how the game works, or problems with it (bugs, viruses, etc.), please contact: "Ludmila-129" (game developer).']}
 };
 function faq(l){const f=FAQ[l];$('#fh').textContent=f.h;$('#fp').innerHTML=f.p.map(x=>`<p>${x}</p>`).join('')}
 
-/* Precarga de imágenes: evita que aparezcan "vacías" la primera vez que se usan */
+/* Precarga de imágenes */
 (function(){
   const P=['f_navy','f_dark','f_hover','f_sel','f_ok','f_fail','btn_blue','btn_green','btn_orange','panel','icon_carrito'].map(n=>`assets/ui/${n}.png`);
   LEVELS.forEach(L=>{P.push('assets/scenes/'+L.scene);[...(L.spots||[]),...(L.items||[]),L.item,...(L.fixed||[])].forEach(o=>o&&o.icon&&P.push(`assets/sprites/${o.icon}.png`))});
